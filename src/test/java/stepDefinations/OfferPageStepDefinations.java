@@ -77,7 +77,7 @@ public class OfferPageStepDefinations {
 		    String childWindow=i1.next();
 		    testContextDI.driver.switchTo().window(childWindow);
 		}
-		
+		//return this;
 		return new OfferPageStepDefinations(testContextDI.driver);
 	}
 	@Then("perform validation in betweenlanding page and offer page result")
