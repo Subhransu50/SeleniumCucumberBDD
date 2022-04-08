@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testsuite errors="0" failures="0" name="io.cucumber.core.plugin.JUnitFormatter" skipped="0" tests="1" time="16.222">
+<testcase classname="Search and Place the Order for Products" name="Search Experience for product search in both Home and Offers Page" time="14.968">
+<system-out><![CDATA[Given User is on GreenCart landing page.....................................passed
+When Usersearched with shortname "Tom" and extracted actual name of product.passed
+Then User searched for "Tom" shortname in offers page to check if product exists.passed
+And perform validation in betweenlanding page and offer page result.........passed
+]]></system-out>
+</testcase>
+</testsuite>
