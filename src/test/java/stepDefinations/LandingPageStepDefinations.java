@@ -15,6 +15,7 @@ import org.testng.Assert;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import pageObjects.LandingPage;
 import utility.TestContextDependancyInjection;
 
 public class LandingPageStepDefinations {
@@ -24,31 +25,43 @@ public class LandingPageStepDefinations {
 		this.testContextDI=testContextDI;
 	}
 	
+	  By inputSearch=By.xpath("//input[@type='search']");
+	  By fruitName=By.cssSelector("h4.product-name");
+	  
+	
 	WebDriverWait wait;
 	public WebDriver driver;
 	String landingPageProductName;
 	String offerPageProductName;
 	@Given("User is on GreenCart landing page")
-	public void user_is_on_green_cart_landing_page() {
-		System.setProperty("webdriver.chrome.driver", "C:\\Users\\panda\\Downloads\\chromedriver_win32\\Chromedriver.exe");
+	public void user_is_on_green_cart_landing_page() throws Exception {
+		testContextDI.baseTest.WebDriverManager();
+		/*System.setProperty("webdriver.chrome.driver", "C:\\Users\\panda\\Downloads\\chromedriver_win32\\Chromedriver.exe");
 		testContextDI.driver =new ChromeDriver();
 		testContextDI.driver.get("https://rahulshettyacademy.com/seleniumPractise/#/");
 		wait=new WebDriverWait(testContextDI.driver,30);
 		testContextDI.driver.manage().window().maximize();
 		testContextDI.driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-	  
+	  */
+		
 	}
-	@When("Usersearched with shortname {string} and extracted actual name of product")
-	public void usersearched_with_shortname_and_extracted_actual_name_of_product(String string) throws InterruptedException {
-	   By inputSearch=By.xpath("//input[@type='search']");
-	   By fruitName=By.cssSelector("h4.product-name");
-	   testContextDI.driver.findElement(inputSearch).sendKeys(string);
-	   //Thread.sleep(3000);
-	   wait.until(ExpectedConditions.visibilityOfElementLocated(fruitName));
-	   String frt= testContextDI.driver.findElement(fruitName).getText();
-	   String[] frtArray=frt.split("-");
-	   testContextDI.landingPageProductName=frtArray[0].trim();
-	   System.out.println(testContextDI.landingPageProductName+" Product Name is Extracted from home page");
+	//@When("Usersearched with shortname {string} and extracted actual name of product")
+	@When("^Usersearched with shortname (.+) and extracted actual name of product$")
+	public void usersearched_with_shortname_and_extracted_actual_name_of_product(String string) throws Exception {
+	
+		 
+		  /* testContextDI.driver.findElement(inputSearch).sendKeys(string);
+		   wait.until(ExpectedConditions.visibilityOfElementLocated(fruitName));	 
+		   String frt= testContextDI.driver.findElement(fruitName).getText();
+		 String[] frtArray=frt.split("-");
+		   testContextDI.landingPageProductName=frtArray[0].trim();*/
+		
+		//LandingPage landingPage=new LandingPage(testContextDI.driver);
+		LandingPage landingPage=testContextDI.pageObjectsManager.getLandingPage();
+	 String frt= landingPage.searchItem(string)
+			 .getProductName();  
+	 testContextDI.landingPageProductName=landingPage.extractFruitName(frt);
+	   System.out.println(testContextDI.landingPageProductName+" Product Name issss Extracted from home page");
 	   
 	}
 	/*@Then("User searched for {string} shortname in offers page to check if product exists")

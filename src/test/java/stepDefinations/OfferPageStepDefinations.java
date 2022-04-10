@@ -12,10 +12,14 @@ import org.testng.Assert;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import pageObjects.LandingPage;
+import pageObjects.OffersPage;
+import pageObjects.PageObjectsManager;
 import utility.TestContextDependancyInjection;
 
 public class OfferPageStepDefinations {
 	TestContextDependancyInjection testContextDI;
+	PageObjectsManager pageObjectsManager;
 	public OfferPageStepDefinations(TestContextDependancyInjection testContextDI)
 	{
 		this.testContextDI=testContextDI;
@@ -49,16 +53,25 @@ public class OfferPageStepDefinations {
 	   System.out.println(landingPageProductName+" Product Name is Extracted from home page");
 	   
 	}*/
-	@Then("User searched for {string} shortname in offers page to check if product exists")
+	//@Then("User searched for {string} shortname in offers page to check if product exists")
+	@Then("^User searched for (.+) shortname in offers page to check if product exists$")
 	public void user_searched_for_same_shortname_in_offers_page_to_check_if_product_exists(String string) {
 	    
-		switchWindow();
-	    By inputSearch=By.xpath("//input[@type='search']");
+		//switchWindow();
+	   /* By inputSearch=By.xpath("//input[@type='search']");
 	    testContextDI.driver.findElement(inputSearch).sendKeys(string);
 	    By vegName=By.cssSelector("tr td:nth-child(1)");
 	    offerPageProductName= testContextDI.driver.findElement(vegName).getText();
 	    System.out.println(offerPageProductName+" Product Name is Extracted from offers page");
-	   
+	   */
+	   // OffersPage offersPage=new OffersPage(testContextDI.driver);
+		LandingPage landingPage=testContextDI.pageObjectsManager.getLandingPage();
+		landingPage.clickTopDeals();
+		testContextDI.webDriverTestCommonUtility.SwitchWindow();
+	    OffersPage offersPage= testContextDI.pageObjectsManager.getOfferPage();
+	    offersPage.searchItem(string);
+	    offerPageProductName=offersPage.getProductFromOffersPage();
+	    System.out.println(offerPageProductName+" Product Name is Extracted from offers page");
 	}
 	public OfferPageStepDefinations switchWindow()
 	{
@@ -68,23 +81,30 @@ public class OfferPageStepDefinations {
 			
 		}else
 		{
-		  String parentWindow=testContextDI.driver.getWindowHandle();
-		    testContextDI.driver.findElement(By.linkText("Top Deals")).click();
-		    Set<String> totalWindow=testContextDI.driver.getWindowHandles();
+			String parentWindow=testContextDI.driver.getWindowHandle();
+			
+			//LandingPage landingPage=new LandingPage(testContextDI.driver);.
+			LandingPage landingPage=testContextDI.pageObjectsManager.getLandingPage();
+			landingPage.clickTopDeals();
+			testContextDI.webDriverTestCommonUtility.SwitchWindow();
+			
+		   // testContextDI.driver.findElement(By.linkText("Top Deals")).click();
+		    /*Set<String> totalWindow=testContextDI.driver.getWindowHandles();
 		   // driver.switchTo().window(totalWindow[0]);
 		    Iterator<String> i1=totalWindow.iterator();
 		    i1.next();
 		    String childWindow=i1.next();
-		    testContextDI.driver.switchTo().window(childWindow);
+		    testContextDI.driver.switchTo().window(childWindow);*/
 		}
 		//return this;
 		return new OfferPageStepDefinations(testContextDI.driver);
 	}
 	@Then("perform validation in betweenlanding page and offer page result")
-	public void perform_validation_in_betweenlanding_page_and_offer_page_result()
+	public void perform_validation_in_betweenlanding_page_and_offer_page_result() throws Exception
 	{
 		Assert.assertEquals(testContextDI.landingPageProductName, offerPageProductName,"Assertion failed");
-		testContextDI.driver.quit();
+	//	testContextDI.driver.quit();
+		//testContextDI.baseTest.WebDriverManager().quit();
 	}
 
 }
